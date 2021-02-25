@@ -4,7 +4,7 @@ Northcoders have set up an api to serve data about past and present employees he
 
 Your first task is to retrieve the instructions left for you by your mole on the inside...
 
-- Make a request using node's `https` module to the following endpoint to get the instructions left for you: /api/confidential
+- Make a request using node's `https` module to the following endpoint to get the instructions left for you: `/api/confidential`
 
 - Once you have your instructions, save them in a markdown file (a file with a `.md` extension)
 
