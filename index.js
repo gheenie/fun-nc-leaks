@@ -115,4 +115,53 @@ function getInterests() {
     });
 }
 
-getInterests();
+// ### Task 3
+
+// Write a function called `getPets` that does the same as the Task 2 but for pets. The endpoint is `https://nc-leaks.herokuapp.com/api/people/:username/pets`;
+
+// > Note: Some of the users do not have pets and so the server will respond with a person but an empty pets array! These responses should not be included in the `pets.json`.
+
+function getPets() {
+    fs.readFile('northcoder.json', (err, data) => {
+        if (err) throw err;
+        else {
+            const northcoderPeopleInJson = JSON.parse(data);
+            const personAndPets = []
+            let count = 0
+
+            northcoderPeopleInJson.people.forEach((northcoder, i) => {
+                const username = northcoder.username;
+                const options = {
+                    hostname: 'nc-leaks.herokuapp.com',
+                    path: `/api/people/${username}/pets`,
+                    method: 'GET'
+                };
+
+                const req = https.request(options, (response) => {
+                    let body = '';
+            
+                    response.on('data', (packet) => {
+                        body += packet.toString();
+                    });
+            
+                    response.on('end', () => {
+                        const parsedBody = JSON.parse(body);
+                        personAndPets[i] = parsedBody.person;
+                        count++;
+                        
+                        if (count === northcoderPeopleInJson.people.length) {
+                            const filteredPersonAndPets = personAndPets.filter(element => element !== undefined)
+                            const personAndPetsInJson = { personAndPets: filteredPersonAndPets};
+                            console.log(filteredPersonAndPets);
+                            fs.writeFile(`pets.json`, JSON.stringify(personAndPetsInJson), () => {});
+                        }
+                    });
+                });
+                req.end()
+            });
+        }
+
+    });
+}
+
+getPets()
