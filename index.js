@@ -59,8 +59,6 @@ function getPeople() {
     req.end()
 }
 
-//getPeople();
-
 function getInterests() {
     fs.readFile('northcoder.json', (err, data) => {
         if (err) throw err;
@@ -106,8 +104,6 @@ function getInterests() {
         }
     });
 }
-
-//getInterests();
 
 function getInterestsUsingSuperagent() {
     fs.readFile('northcoder.json', (err, data) => {
@@ -174,19 +170,18 @@ function getPets() {
                         if (count === northcoderPeopleInJson.people.length) {
                             const filteredPersonAndPets = personAndPets.filter(element => element !== undefined)
                             const personAndPetsInJson = { personAndPets: filteredPersonAndPets};
-                            console.log(filteredPersonAndPets);
+                            
                             fs.writeFile(`pets.json`, JSON.stringify(personAndPetsInJson), () => {});
                         }
                     });
                 });
-                req.end()
+
+                req.end();
             });
         }
 
     });
 }
-
-//getPets()
 
 function getPetsUsingSuperagent() {
     fs.readFile('northcoder.json', (err, data) => {
