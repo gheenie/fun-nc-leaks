@@ -119,8 +119,11 @@ function getInterestsUsingSuperagent() {
                 superagent
                 .get(`https://nc-leaks.herokuapp.com/api/people/${username}/interests`)
                 .end((err, response) => {
-                    if (err) console.log(err)
-                    else {
+                    if (err) {
+                        console.log(err);
+
+                        count++;
+                    } else {
                         personAndInterests[i] = response.body.person;
                         
                         count++;
@@ -128,7 +131,7 @@ function getInterestsUsingSuperagent() {
                         if (count === northcoderPeopleInJson.people.length) {
                             const personAndInterestsInJson = { personAndInterests: personAndInterests};
 
-                            fs.writeFile(`interests.json`, JSON.stringify(personAndInterestsInJson), () => {});
+                            fs.writeFile(`interestss.json`, JSON.stringify(personAndInterestsInJson), () => {});
                         }
                     }
                 });
@@ -193,6 +196,7 @@ function getPetsUsingSuperagent() {
 
             northcoderPeopleInJson.people.forEach((northcoder, i) => {
                 const username = northcoder.username;
+
                 superagent 
                 .get(`https://nc-leaks.herokuapp.com/api/people/${username}/pets`)
                 .end((err, response) => {
@@ -200,16 +204,14 @@ function getPetsUsingSuperagent() {
                     {
                         console.log("error")
                         count++
-                    }
-                    else {
-                        const petss = response.body
-                
-                        personAndPets[i] = petss.person;
+                    } else {
+                        personAndPets[i] = response.body.person;
                         count++;
                         
                         if (count === northcoderPeopleInJson.people.length) {
                             const filteredPersonAndPets = personAndPets.filter(element => element !== undefined)
                             const personAndPetsInJson = { personAndPets: filteredPersonAndPets};
+
                             fs.writeFile(`petss.json`, JSON.stringify(personAndPetsInJson), () => {});  
                         }
                     }
