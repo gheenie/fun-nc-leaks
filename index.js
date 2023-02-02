@@ -171,40 +171,78 @@ function getPets() {
 
             northcoderPeopleInJson.people.forEach((northcoder, i) => {
                 const username = northcoder.username;
-                const options = {
-                    hostname: 'nc-leaks.herokuapp.com',
-                    path: `/api/people/${username}/pets`,
-                    method: 'GET'
-                };
-
-                const req = https.request(options, (response) => {
-                    let body = '';
-            
-                    response.on('data', (packet) => {
-                        body += packet.toString();
-                    });
-            
-                    response.on('end', () => {
-                        const parsedBody = JSON.parse(body);
-                        personAndPets[i] = parsedBody.person;
+                superagent 
+                .get(`https://nc-leaks.herokuapp.com/api/people/${username}/pets`)
+                .end((err, response) => {
+                    if (err) 
+                    {
+                        console.log("error")
+                        count++
+                    }
+                    else {
+                        const petss = response.body
+                
+                        personAndPets[i] = petss.person;
                         count++;
                         
                         if (count === northcoderPeopleInJson.people.length) {
                             const filteredPersonAndPets = personAndPets.filter(element => element !== undefined)
                             const personAndPetsInJson = { personAndPets: filteredPersonAndPets};
-                            console.log(filteredPersonAndPets);
-                            fs.writeFile(`pets.json`, JSON.stringify(personAndPetsInJson), () => {});
-                        }
-                    });
-                });
-                req.end()
-            });
-        }
+                            fs.writeFile(`petss.json`, JSON.stringify(personAndPetsInJson), () => {});  
+                                        }
+                    }
+                })
+            })
+        }    
+    })
+}       
 
-    });
-}
+getPets()
 
 //getPets()
+
+// function getPets() {
+//     fs.readFile('northcoder.json', (err, data) => {
+//         if (err) throw err;
+//         else {
+//             const northcoderPeopleInJson = JSON.parse(data);
+//             const personAndPets = []
+//             let count = 0
+
+//             northcoderPeopleInJson.people.forEach((northcoder, i) => {
+//                 const username = northcoder.username;
+//                 const options = {
+//                     hostname: 'nc-leaks.herokuapp.com',
+//                     path: `/api/people/${username}/pets`,
+//                     method: 'GET'
+//                 };
+
+//                 const req = https.request(options, (response) => {
+//                     let body = '';
+            
+//                     response.on('data', (packet) => {
+//                         body += packet.toString();
+//                     });
+            
+//                     response.on('end', () => {
+//                         const parsedBody = JSON.parse(body);
+//                         personAndPets[i] = parsedBody.person;
+//                         count++;
+                        
+//                         if (count === northcoderPeopleInJson.people.length) {
+//                             const filteredPersonAndPets = personAndPets.filter(element => element !== undefined)
+//                             const personAndPetsInJson = { personAndPets: filteredPersonAndPets};
+//                             console.log(filteredPersonAndPets);
+//                             fs.writeFile(`pets.json`, JSON.stringify(personAndPetsInJson), () => {});
+//                         }
+//                     });
+//                 });
+//                 req.end()
+//             });
+//         }
+
+//     });
+// }
 
 /*Automation is great. Create a function called scavengeForNcData that uses all of the functions you created in Tasks 1-3 to automate your hunt for data.
 
