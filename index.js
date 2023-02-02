@@ -1,7 +1,8 @@
 const https = require('https');
 const fs = require('fs');
+const superagent = require('superagent');
 
-function boop(){
+function boop() {
     const options = {
         hostname: 'nc-leaks.herokuapp.com',
         path: '/api/confidential',
@@ -73,7 +74,8 @@ function getPeople() {
     Once you have all responses in the array, save it to a file called interests.json.
 */
 
-function getInterests() {
+// Not using superagent.
+/*function getInterests() {
     fs.readFile('northcoder.json', (err, data) => {
         if (err) throw err;
         else {
@@ -114,6 +116,38 @@ function getInterests() {
                 });
             
                 req.end()
+            });
+        }
+    });
+}*/
+
+function getInterests() {
+    fs.readFile('northcoder.json', (err, data) => {
+        if (err) throw err;
+        else {
+            const northcoderPeopleInJson = JSON.parse(data);
+            const personAndInterests = [];
+            let count = 0;
+
+            northcoderPeopleInJson.people.forEach((northcoder, i) => {
+                const username = northcoder.username;
+
+                superagent
+                .get(`https://nc-leaks.herokuapp.com/api/people/${username}/interests`)
+                .end((err, response) => {
+                    if (err) console.log(err)
+                    else {
+                        personAndInterests[i] = response.body.person;
+                        
+                        count++;
+                        
+                        if (count === northcoderPeopleInJson.people.length) {
+                            const personAndInterestsInJson = { personAndInterests: personAndInterests};
+
+                            fs.writeFile(`interests.json`, JSON.stringify(personAndInterestsInJson), () => {});
+                        }
+                    }
+                });
             });
         }
     });
@@ -181,4 +215,4 @@ function scavengeForNcData() {
     getPeople();
 }
 
-scavengeForNcData();
+//scavengeForNcData();
