@@ -54,6 +54,8 @@ function getPeople() {
             const northcoderPeopleInJson = { people: northcoderPeople };
 
             fs.writeFile(`northcoder.json`, JSON.stringify(northcoderPeopleInJson), () => {});
+
+            getInterests();
         });
     });
 
@@ -105,6 +107,8 @@ function getInterests() {
                             const personAndInterestsInJson = { personAndInterests: personAndInterests};
 
                             fs.writeFile(`interests.json`, JSON.stringify(personAndInterestsInJson), () => {});
+
+                            getPets();
                         }
                     });
                 });
@@ -114,6 +118,8 @@ function getInterests() {
         }
     });
 }
+
+//getInterests();
 
 // ### Task 3
 
@@ -164,4 +170,15 @@ function getPets() {
     });
 }
 
-getPets()
+//getPets()
+
+/*Automation is great. Create a function called scavengeForNcData that uses all of the functions you created in Tasks 1-3 to automate your hunt for data.
+
+    Note: Remember getInterests and getPets must only be used when you can be sure that the northcoders.json has finished being created. Considering these are all asynchronous functions, how can you ensure this?
+*/
+
+function scavengeForNcData() {
+    getPeople();
+}
+
+scavengeForNcData();
